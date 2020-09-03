@@ -15,5 +15,8 @@ app.get('/', (req, res) => res.sendFile(__dirname + '/views/index.html'));
 // Display a temporary message at the GET /api/hello route
 app.get('/api/hello', (req, res) => res.json({ greeting: 'hello API' }));
 
+// Handle returning a timestamp
+app.get('/api/timestamp/:date?', (req, res) => res.json({ message: 'Not yet implemented' }));
+
 // Create a listener to handle requests
 const listener = app.listen(process.env.PORT, () => console.log('Your app is listening on port ' + listener.address().port));

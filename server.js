@@ -19,8 +19,11 @@ app.get('/api/timestamp/:date?', (req, res) => {
 
     // Check if the optional date parameter was provided
     if (req.params.date) {
-        // TODO: Handle the date parameter
-        res.json({ message: 'Date parameter passed', date: req.params.date });
+        // Convert the date parameter to a string
+        let unixDate = +req.params.date;
+
+        // Check if the date passed is unix time. If it's not, use the date string provided
+        date = isNaN(unixDate) ? new Date(req.params.date) : new Date(unixDate);
     }
 
     // Return the unix and UTC time

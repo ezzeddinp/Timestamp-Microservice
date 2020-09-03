@@ -12,9 +12,6 @@ app.use(express.static('public'));
 // Root endpoint. Display index file
 app.get('/', (req, res) => res.sendFile(__dirname + '/views/index.html'));
 
-// Display a temporary message at the GET /api/hello route
-app.get('/api/hello', (req, res) => res.json({ greeting: 'hello API' }));
-
 // Handle returning a timestamp
 app.get('/api/timestamp/:date?', (req, res) => {
     // Store our date response. This will default to the current datetime

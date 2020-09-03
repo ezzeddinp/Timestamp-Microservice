@@ -26,11 +26,11 @@ app.get('/api/timestamp/:date?', (req, res) => {
         date = isNaN(unixDate) ? new Date(req.params.date) : new Date(unixDate);
 
         // Check if the date created is valid. Throw an error if it's an invalid date
-        if (!(date instanceof Date) || isNaN(date.getTime())) res.json({ error: "Invalid Date" });
+        if (!(date instanceof Date) || isNaN(date.getTime())) return res.json({ error: "Invalid Date" });
     }
 
     // Return the unix and UTC time
-    res.json({ unix: date.getTime(), utc: date.toUTCString() });
+    return res.json({ unix: date.getTime(), utc: date.toUTCString() });
 });
 
 // Create a listener to handle requests

@@ -1,37 +1,55 @@
-const express = require('express');
-const app = express();
+// init project
+var express = require('express');
+var app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC
-const cors = require('cors');
-app.use(cors({ optionSuccessStatus: 200 }));  // some legacy browsers choke on 204
+// so that your API is remotely testable by FCC 
+var cors = require('cors');
+app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
-// Root endpoint. Display index file
-app.get('/', (req, res) => res.sendFile(__dirname + '/views/index.html'));
-
-// Handle returning a timestamp
-app.get('/api/timestamp/:date?', (req, res) => {
-    // Store our date response. This will default to the current datetime
-    let date = new Date();
-
-    // Check if the optional date parameter was provided
-    if (req.params.date) {
-        // Convert the date parameter to a string
-        let unixDate = +req.params.date;
-
-        // Check if the date passed is unix time. If it's not, use the date string provided
-        date = isNaN(unixDate) ? new Date(req.params.date) : new Date(unixDate);
-
-        // Check if the date created is valid. Throw an error if it's an invalid date
-        if (!(date instanceof Date) || isNaN(date.getTime())) return res.json({ error: "Invalid Date" });
-    }
-
-    // Return the unix and UTC time
-    return res.json({ unix: date.getTime(), utc: date.toUTCString() });
+// http://expressjs.com/en/starter/basic-routing.html
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/views/index.html');
 });
 
-// Create a listener to handle requests
-const listener = app.listen(process.env.PORT, () => console.log('Your app is listening on port ' + listener.address().port));
+// Timestamp microservice API Endpoint
+app.get('/api/:date?', function(req, res) {
+    const { date } = req.params;
+
+    if (!date) {
+        const currentDate = new Date();
+        return res.json({
+            unix: currentDate.getTime(),
+            utc: currentDate.toUTCString()
+        });
+    }
+
+    let timestamp;
+    if (!isNaN(date)) {
+        timestamp = new Date(parseInt(date));
+    } else {
+        timestamp = new Date(date);
+    }
+
+    if (isNaN(timestamp)) {
+        return res.json({ error: 'Invalid Date' });
+    }
+    
+    return res.json({
+        unix: timestamp.getTime(),
+        utc: timestamp.toUTCString()
+    });
+});
+
+// your frist API Endpoint
+app.get('/api/hello', function(req, res) {
+    res.json({ greetings: 'hello API' });
+});
+
+// listen for requests 
+var listener = app.listener(process.env.PORT, function() {
+    console.log('Your app is listening on port ' + listener.address().port);
+});
